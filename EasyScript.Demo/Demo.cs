@@ -15,8 +15,8 @@ public class Program
         var result = engine.EvaluateAsEasyObject(
             """
             var answer = $1 + x;
-            echo(answer, "answer");
-            log(answer, "answer");
+            $echo(answer, "answer");
+            $log(answer, "answer");
             return answer;
             """, 111);
 

@@ -13,16 +13,20 @@ public class EasyScript
 {
     protected Jint.Engine? engine = null; //JintScript.CreateEngine();
     protected List<Assembly> asmList = new List<Assembly>();
-    public EasyScript(Assembly[]? memAsmList = null)
+    public EasyScript(Assembly[]? asmArray = null, bool allocEmptyExports = false)
     {
-        if (memAsmList != null)
+        if (asmArray != null)
         {
-            foreach (var asm in memAsmList)
+            foreach (var asm in asmArray)
             {
                 asmList.Add(asm);
             }
         }
         engine = JintScript.CreateEngine(asmList.ToArray());
+        if (allocEmptyExports)
+        {
+            engine.Execute("globalThis.exports = {}");
+        }
     }
     public void SetValue(string name, dynamic? value)
     {
