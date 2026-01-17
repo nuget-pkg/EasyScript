@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0117.1548.46</Version>
+		<Version>2026.0117.1634.19</Version>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyScript</RootNamespace>
