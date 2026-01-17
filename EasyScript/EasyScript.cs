@@ -1,4 +1,5 @@
 ﻿//css_inc JintScript.cs
+//css_inc IEasyObject.cs
 //css_nuget EasyObject
 //css_nuget Jint
 using System;
@@ -9,9 +10,9 @@ using static Global.EasyObject;
 
 namespace Global;
 
-public class EasyScript
+public class EasyScript: IEasyScript
 {
-    protected Jint.Engine? engine = null; //JintScript.CreateEngine();
+    protected Jint.Engine? engine = null;
     protected List<Assembly> asmList = new List<Assembly>();
     public EasyScript(Assembly[]? asmArray = null, bool allocEmptyExports = false)
     {
@@ -34,7 +35,7 @@ public class EasyScript
     }
     public dynamic? GetValue(string name)
     {
-        return engine!.GetValue(name).ToObject();
+        return FromObject(engine!.GetValue(name).ToObject());
     }
     public EasyObject GetValueAsEasyObject(string name)
     {
@@ -60,7 +61,8 @@ public class EasyScript
         {
             SetValue($"${i + 1}", vars[i]);
         }
-        var result = engine!.Evaluate(script).ToObject();
+        //var result = engine!.Evaluate(script).ToObject();
+        var result = FromObject(engine!.Evaluate(script).ToObject()).ToObject();
         for (int i = 0; i < vars.Length; i++)
         {
             engine!.Execute($"delete globalThis.${i + 1};");
