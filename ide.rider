@@ -1,4 +1,4 @@
 #! /usr/bin/env bash
 set -uvx
 set -e
-start EasyScript.sln
+start rider64.exe EasyScript.sln
