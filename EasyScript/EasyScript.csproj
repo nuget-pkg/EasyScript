@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0118.1322.17</Version>
+		<Version>2026.0118.1825.31</Version>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyScript</RootNamespace>
@@ -18,9 +18,9 @@
 		<PackageId>EasyScript</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/nuget-pkg/EasyScript</PackageProjectUrl>
-		<PackageTags>json;parser</PackageTags>
+		<PackageTags>javascript;interpreter;es5;es2015;es6;ecmascript;interop</PackageTags>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReadmeFile>.\README.md</PackageReadmeFile>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
 		<UseWindowsForms>true</UseWindowsForms>
@@ -46,7 +46,7 @@
 		<Reference Include="System.Xml.Linq" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\README.md" Pack="true" PackagePath="" />
+		<None Include=".\README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="EasyObject" Version="2026.118.1305.30" />
