@@ -7,11 +7,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Xml.Linq;
 using static Global.EasyObject;
 
 namespace Global;
 
-public class EasyScript: IEasyScript
+public class EasyScript //: IEasyScript
 {
     // ReSharper disable once MemberCanBePrivate.Global
     protected Jint.Engine? Engine = null;
@@ -23,13 +24,7 @@ public class EasyScript: IEasyScript
     public bool Transform = true;
     // ReSharper disable once MemberCanBePrivate.Global
     public bool Debug = false;
-    public EasyScript(
-        Assembly[]? asmArray = null
-        //,
-        //bool allocEmptyExports = false,
-        //bool transform = false,
-        //bool debug = false
-        )
+    public EasyScript(Assembly[]? asmArray = null)
     {
         if (asmArray != null)
         {
@@ -39,63 +34,15 @@ public class EasyScript: IEasyScript
             }
         }
         Engine = JintScript.CreateEngine(AsmList.ToArray());
-        //if (allocEmptyExports)
-        //{
-        //    Engine!.Execute("globalThis.exports = {}");
-        //}
-        //Debug = debug;
-        //if (transform)
-        //{
-        //    Transformer = new EasyScript(
-        //        //allocEmptyExports: true
-        //        //,
-        //        //transform: false,
-        //        //debug: false
-        //        );
-        //    Transformer.Execute("""
-        //                        var console = {
-        //                            debug() {},
-        //                            log() {},
-        //                            warn() {},
-        //                        };
-
-        //                        """);
-        //    var assembly = typeof(EasyScript).Assembly;
-        //    //Log(assembly.GetManifestResourceNames());
-        //    var text = Sys.ResourceAsText(assembly, "EasyScript:https-cdn.jsdelivr.net-npm-@babel-standalone@7.28.6-babel.js");
-        //    //Echo(text, "text");
-        //    //var engine = new EasyScript(allocEmptyExports: true);
-        //    Transformer.Execute(text);
-        //    Transformer.Execute("""
-        //                        function transform(fileName, code) {
-        //                            //$log(fileName, "transform(): fileName");
-        //                            //$log(code, "transform(): code(01)");
-        //                            code = Babel.transform(code,
-        //                                                   { presets: ["typescript"],
-        //                        	                         filename: fileName,
-        //                                                     sourceType: "script"
-        //                                                   }).code;
-        //                            //$log(code, "transform(): code(2)");
-        //                            //throw new Error("xxx");
-        //                            return code;
-        //                        }
-
-        //                        """);
-        //}
     }
 
-    protected string TransformCode(string fileName, string code, object[] vars)
+    protected string TransformCode(string methodName, string fileName, string code, object[] vars)
     {
         if (Transform)
         {
             if (Transformer == null)
             {
-                Transformer = new EasyScript(
-                    //allocEmptyExports: true
-                    //,
-                    //transform: false,
-                    //debug: false
-                    );
+                Transformer = new EasyScript();
                 Transformer.Transform = false;
                 Transformer.Debug = false;
                 var assembly = typeof(EasyScript).Assembly;
@@ -104,7 +51,7 @@ public class EasyScript: IEasyScript
                 //Echo(text, "text");
                 Transformer.Execute(text);
                 Transformer.Execute("""
-                                    function transform(fileName, code) {
+                                    function $$transform(fileName, code) {
                                         //$log(fileName, "transform(): fileName");
                                         //$log(code, "transform(): code(01)");
                                         code = Babel.transform(code,
@@ -119,28 +66,23 @@ public class EasyScript: IEasyScript
 
                                     """);
             }
-            if (fileName.EndsWith(".js") || fileName.EndsWith(".ts"))
-            {
-                fileName = Path.GetFileNameWithoutExtension(fileName);
-            }
-            fileName += "(transformed).ts";
-            code = Transformer.Evaluate("""
-                                        return transform($1, $2)
-                                        """, fileName, code);
+            //code = Transformer.Evaluate("""
+            //                            $$transform($1, $2)
+            //                            """, fileName, code);
+            code = Transformer.Call("$$transform", fileName, code);
         }
         if (Debug)
         {
-            Log(fileName, "fileName");
+            Log($"EasyScript.{methodName}(\"{fileName}\")");
+            //Log(vars, "params");
+            for (int i = 0; i < vars.Length; i++)
+            {
+                Log($"{EasyObject.FromObject(vars[i]).ToJson(indent: false)}", $"  #parameter ${i + 1}");
+            }
             var lines = Sys.TextToLines(code);
             for (int i = 0; i < lines.Count; i++)
             {
                 Log($"{i+1,4}: {lines[i]}");
-            }
-            //Log(vars, "params");
-            for (int i = 0; i < vars.Length; i++)
-            {
-                //Log($"${i + 1} = {EasyObject.FromObject(vars[i]).ToJson(indent: false)}");
-                Log($"{EasyObject.FromObject(vars[i]).ToJson(indent: false)}", $"parameter ${i + 1}");
             }
         }
         //if (Debug) Echo(code, "[Tranformed]");
@@ -168,11 +110,24 @@ public class EasyScript: IEasyScript
     }
     public EasyObject GetValueAsEasyObject(string name)
     {
-        return EasyObject.FromObject(GetValue(name));
+        var result =  EasyObject.FromObject(GetValue(name));
+        if (Debug)
+        {
+            Log($"EasyScript.GetValueAsEasyObject(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+        }
+        return result;
     }
-    public void ExecuteFile(string fileName, string script, params object[] vars)
+    private void ExecuteWithMethodName(string methodName, string fileName, string script, params object[] vars)
     {
-        script = TransformCode(fileName, script, vars);
+        if (Transform)
+        {
+            if (fileName.EndsWith(".js") || fileName.EndsWith(".ts"))
+            {
+                fileName = Path.GetFileNameWithoutExtension(fileName);
+            }
+            fileName += "(transformed).ts";
+        }
+        script = TransformCode(methodName, fileName, script, vars);
         if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
@@ -184,13 +139,26 @@ public class EasyScript: IEasyScript
             Engine!.Execute($"delete globalThis.${i + 1};");
         }
     }
+    public void ExecuteFile(string fileName, string script, params object[] vars)
+    {
+        ExecuteWithMethodName("ExecuteFile", fileName, script, vars);
+    }
     public void Execute(string script, params object[] vars)
     {
-        ExecuteFile("<unknown>", script, vars);
+        string fileName = "<unknown>";
+        ExecuteWithMethodName("Execute", fileName, script, vars);
     }
-    public dynamic? EvaluateFile(string fileName, string script, params object[] vars)
+    private dynamic? EvaluateeWithMethodName(string methodName, string fileName, string script, params object[] vars)
     {
-        script = TransformCode(fileName, script, vars);
+        if (Transform)
+        {
+            if (fileName.EndsWith(".js") || fileName.EndsWith(".ts"))
+            {
+                fileName = Path.GetFileNameWithoutExtension(fileName);
+            }
+            fileName += "(transformed).ts";
+        }
+        script = TransformCode(methodName, fileName, script, vars);
         if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
@@ -202,19 +170,30 @@ public class EasyScript: IEasyScript
         {
             Engine!.Execute($"delete globalThis.${i + 1};");
         }
+        if (Debug)
+        {
+            Log($"EasyScript.{methodName}(\"{fileName}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+        }
         return result;
+    }
+    public dynamic? EvaluateFile(string fileName, string script, params object[] vars)
+    {
+        return EvaluateeWithMethodName("EvaluateFile", fileName, script, vars);
     }
     public dynamic? Evaluate(string script, params object[] vars)
     {
-        return EvaluateFile("<unknown>", script, vars);
+        //return EvaluateFile("<unknown>", script, vars);
+        string fileName = "<unknown>";
+        return EvaluateeWithMethodName("Evaluate", fileName, script, vars);
     }
     public EasyObject EvaluateFileAsEasyObject(string fileName, string script, params object[] vars)
     {
-        return EasyObject.FromObject(EvaluateFile(fileName, script, vars));
+        return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateFileAsEasyObject", fileName, script, vars));
     }
     public EasyObject EvaluateAsEasyObject(string script, params object[] vars)
     {
-        return EasyObject.FromObject(Evaluate(script, vars));
+        string fileName = "<unknown>";
+        return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateAsEasyObject", fileName, script, vars));
     }
     public dynamic? Call(string name, params object[] vars)
     {

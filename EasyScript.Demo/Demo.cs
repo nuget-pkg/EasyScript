@@ -2,6 +2,7 @@
 //css_nuget EasyObject
 namespace EasyScript.Demo;
 
+using System;
 using static Global.EasyObject;
 
 public class Program
@@ -48,8 +49,17 @@ public class Program
 
             """);
         Echo(engine.GetValue("result"));
-        engine.Execute("""
-            console.log("aaa", "bbb");
-            """);
+        try
+        {
+            engine.Execute("""
+                console.log("aaa", "bbb");
+                throw new Error("my-error");
+                """);
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"Unhandled Exception({Global.Sys.FullName(e)}): {e.Message}");
+            Console.Error.WriteLine(e.StackTrace);
+        }
     }
 }

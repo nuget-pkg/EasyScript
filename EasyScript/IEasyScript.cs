@@ -1,4 +1,5 @@
-﻿namespace Global;
+﻿/*
+namespace Global;
 
 public interface IEasyScript
 {
@@ -8,3 +9,4 @@ public interface IEasyScript
     public dynamic? Evaluate(string script, params object[] vars);
     public dynamic? Call(string name, params object[] vars);
 }
+*/
