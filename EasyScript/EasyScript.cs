@@ -79,11 +79,12 @@ public class EasyScript //: IEasyScript
         }
         if (Debug)
         {
-            Log($"EasyScript.{methodName}(\"{fileName}\")");
+            Log($"EasyScript.{methodName}(\"{fileName}\") started:");
             //Log(vars, "params");
             for (int i = 0; i < vars.Length; i++)
             {
-                Log($"{EasyObject.FromObject(vars[i]).ToJson(indent: false)}", $"  #parameter ${i + 1}");
+                //Log($"{EasyObject.FromObject(vars[i]).ToJson(indent: false)}", $"  #parameter ${i + 1}");
+                Log(vars[i], $"  #parameter ${i + 1}");
             }
             var lines = Sys.TextToLines(code);
             for (int i = 0; i < lines.Count; i++)
@@ -100,7 +101,8 @@ public class EasyScript //: IEasyScript
         {
             if (!name.StartsWith("$"))
             {
-                Log($"EasyScript.SetValue(\"{name}\", {EasyObject.FromObject(value).ToJson(indent: false)})");
+                //Log($"EasyScript.SetValue(\"{name}\", {EasyObject.FromObject(value).ToJson(indent: false)})");
+                Log(value, $"EasyScript.SetValue(\"{name}\", value) where value is");
             }
         }
         Engine!.Execute($"globalThis.{name}=({EasyObject.FromObject(value).ToJson()})");
@@ -110,7 +112,8 @@ public class EasyScript //: IEasyScript
         var result = FromObject(Engine!.GetValue(name).ToObject());
         if (Debug)
         {
-            Log($"EasyScript.GetValue(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+            //Log($"EasyScript.GetValue(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+            Log(result, $"EasyScript.GetValue(\"{name}\") returned");
         }
         return result;
     }
@@ -119,7 +122,8 @@ public class EasyScript //: IEasyScript
         var result =  EasyObject.FromObject(GetValue(name));
         if (Debug)
         {
-            Log($"EasyScript.GetValueAsEasyObject(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+            //Log($"EasyScript.GetValueAsEasyObject(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+            Log(result, $"EasyScript.GetValueAsEasyObject(\"{name}\") returned");
         }
         return result;
     }
@@ -178,7 +182,8 @@ public class EasyScript //: IEasyScript
         }
         if (Debug)
         {
-            Log($"EasyScript.{methodName}(\"{fileName}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+            //Log($"EasyScript.{methodName}(\"{fileName}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+            Log(result, $"EasyScript.{methodName}(\"{fileName}\") returned");
         }
         return result;
     }
