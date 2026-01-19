@@ -79,7 +79,8 @@ public class EasyScript //: IEasyScript
         }
         if (Debug)
         {
-            Log($"EasyScript.{methodName}(\"{fileName}\") started:");
+            //Log($"EasyScript.{methodName}(\"{fileName}\") started:");
+            Log(DateTime.Now, $"EasyScript.{methodName}(\"{fileName}\") started at");
             //Log(vars, "params");
             for (int i = 0; i < vars.Length; i++)
             {

@@ -12,7 +12,7 @@ public class Program
     public static void Main(string[] args)
     {
         Log(args, "args");
-        Echo("helloハロー©");
+        //ShowDetail = true;
         var engine = new Global.EasyScript(transform: true, assemblies: [typeof(Program).Assembly]);
         engine.Debug = true;
         engine.SetValue("x", 222);
