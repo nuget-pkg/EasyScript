@@ -12,14 +12,17 @@ public class Program
     {
         Log(args, "args");
         Echo("helloハロー©");
-        var engine = new Global.EasyScript([typeof(Program).Assembly]);
+        var engine = new Global.EasyScript(
+            asmArray: [typeof(Program).Assembly],
+            transpile: true
+            );
         engine.SetValue("x", 222);
         var result = engine.EvaluateAsEasyObject(
             """
-            var answer = $1 + x;
+            var answer:number = $1 + x;
             $echo(answer, "answer");
             $log(answer, "answer");
-            return answer;
+            answer;
 
             """, 111);
 
