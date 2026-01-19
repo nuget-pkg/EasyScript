@@ -16,13 +16,15 @@ internal class JintScript
             }
         });
         engine.SetValue("_globals", new JintScriptGlobal());
+        engine.SetValue("console", new JintScriptConsole());
         engine.Execute("""
             var exports = {};
+            /*
             var console = {
                 debug() {},
                 log() {},
                 warn() {},
-            };
+            };*/
             var $echo = _globals.echo;
             var $log = _globals.log;
             var $getenv = _globals.getenv;
@@ -46,5 +48,35 @@ internal class JintScriptGlobal
     public string getenv(string name)
     {
         return System.Environment.GetEnvironmentVariable(name);
+    }
+}
+internal class JintScriptConsole
+{
+    private void output(string methodName, params object[] args)
+    {
+        for (int i = 0; i < args.Length; i++)
+        {
+            EasyObject.Echo(args[i], $"console.{methodName}(#{i + 1})");
+        }
+    }
+    public void debug(params object[] args)
+    {
+        output("debug", args);
+    }
+    public void error(params object[] args)
+    {
+        output("error", args);
+    }
+    public void info(params object[] args)
+    {
+        output("info", args);
+    }
+    public void log(params object[] args)
+    {
+        output("log", args);
+    }
+    public void warn(params object[] args)
+    {
+        output("warn", args);
     }
 }

@@ -12,12 +12,7 @@ public class Program
     {
         Log(args, "args");
         Echo("helloハロー©");
-        var engine = new Global.EasyScript(
-            asmArray: [typeof(Program).Assembly]
-            //,
-            //transform: true
-            //,debug: true
-            );
+        var engine = new Global.EasyScript([typeof(Program).Assembly]);
         engine.Debug = true;
         engine.SetValue("x", 222);
         var result = engine.EvaluateFileAsEasyObject(
