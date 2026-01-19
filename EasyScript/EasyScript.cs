@@ -24,7 +24,7 @@ public class EasyScript: IEasyScript
     public EasyScript(
         Assembly[]? asmArray = null,
         bool allocEmptyExports = false,
-        bool transpile = false,
+        bool transform = false,
         bool debug = false)
     {
         if (asmArray != null)
@@ -40,9 +40,12 @@ public class EasyScript: IEasyScript
             Engine!.Execute("globalThis.exports = {}");
         }
         Debug = debug;
-        if (transpile)
+        if (transform)
         {
-            Transformer = new EasyScript(allocEmptyExports: true);
+            Transformer = new EasyScript(
+                allocEmptyExports: true
+                , transform: false,
+                debug: false);
             Transformer.Execute("""
                                 var console = {
                                     debug() {},
@@ -58,28 +61,39 @@ public class EasyScript: IEasyScript
             //var engine = new EasyScript(allocEmptyExports: true);
             Transformer.Execute(text);
             Transformer.Execute("""
-                                function transform(code) {
-                                    return Babel.transform(code,
+                                function transform(fileName, code) {
+                                    //$log(fileName, "transform(): fileName");
+                                    //$log(code, "transform(): code(01)");
+                                    code = Babel.transform(code,
                                                            { presets: ["typescript"],
-                                		                     filename: 'file.ts',
+                                	                         filename: fileName,
                                                              sourceType: "script"
                                                            }).code;
+                                    //$log(code, "transform(): code(2)");
+                                    //throw new Error("xxx");
+                                    return code;
                                 }
 
                                 """);
         }
     }
 
-    protected string Tranform(string code, object[] vars)
+    protected string Tranform(string fileName, string code, object[] vars)
     {
         if (Transformer != null)
         {
+            if (!fileName.EndsWith(".ts"))
+            {
+                fileName += ".ts";
+            }
             code = Transformer.Evaluate("""
-                                        return transform($1)
-                                        """, code);
+                                        return transform($1, $2)
+                                        """, fileName, code);
+            fileName = $"{fileName}(transformed)";
         }
         if (Debug)
         {
+            Log(fileName, "fileName");
             var lines = Sys.TextToLines(code);
             for (int i = 0; i < lines.Count; i++)
             {
@@ -91,6 +105,7 @@ public class EasyScript: IEasyScript
                 Log($"   ${i + 1} = {EasyObject.FromObject(vars[i]).ToJson(indent: false)}");
             }
         }
+        //if (Debug) Echo(code, "[Tranformed]");
         return code;
     }
     public void SetValue(string name, dynamic? value)
@@ -111,23 +126,27 @@ public class EasyScript: IEasyScript
     {
         return EasyObject.FromObject(GetValue(name));
     }
-    public void Execute(string script, params object[] vars)
+    public void ExecuteFile(string fileName, string script, params object[] vars)
     {
-        script = Tranform(script, vars);
+        script = Tranform(fileName, script, vars);
         if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
             SetValue($"${i + 1}", vars[i]);
         }
-        Engine!.Execute(script);
+        Engine!.Execute(script, fileName);
         for (int i = 0; i < vars.Length; i++)
         {
             Engine!.Execute($"delete globalThis.${i + 1};");
         }
     }
-    public dynamic? Evaluate(string script, params object[] vars)
+    public void Execute(string script, params object[] vars)
     {
-        script = Tranform(script, vars);
+        ExecuteFile("<unknown>", script, vars);
+    }
+    public dynamic? EvaluateFile(string fileName, string script, params object[] vars)
+    {
+        script = Tranform(fileName, script, vars);
         if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
@@ -140,6 +159,14 @@ public class EasyScript: IEasyScript
             Engine!.Execute($"delete globalThis.${i + 1};");
         }
         return result;
+    }
+    public dynamic? Evaluate(string script, params object[] vars)
+    {
+        return EvaluateFile("<unknown>", script, vars);
+    }
+    public EasyObject EvaluateFileAsEasyObject(string fileName, string script, params object[] vars)
+    {
+        return EasyObject.FromObject(EvaluateFile(fileName, script, vars));
     }
     public EasyObject EvaluateAsEasyObject(string script, params object[] vars)
     {

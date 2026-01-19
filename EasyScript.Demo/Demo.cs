@@ -14,12 +14,26 @@ public class Program
         Echo("helloハロー©");
         var engine = new Global.EasyScript(
             asmArray: [typeof(Program).Assembly],
-            transpile: true,
+            transform: true,
             debug: true
             );
         engine.SetValue("x", 222);
-        var result = engine.EvaluateAsEasyObject(
+        var result = engine.EvaluateFileAsEasyObject(
+            "my-file.ts",
             """
+            class Person {
+                name: string;
+                age: number;
+            
+                constructor(name: string, age: number) {
+                    this.name = name;
+                    this.age = age;
+                }
+            
+                greet() {
+                    console.log("Hello");
+                }
+            }
             var answer:number = $1 + x;
             $echo(answer, "answer");
             $log(answer, "answer");
