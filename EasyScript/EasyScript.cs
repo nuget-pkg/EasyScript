@@ -97,14 +97,14 @@ public class EasyScript: IEasyScript
     {
         if (!name.StartsWith("$"))
         {
-            Log($"   SetValue({name}, {EasyObject.FromObject(value).ToJson(indent: false)})");
+            Log($"   EasyScript.SetValue({name}, {EasyObject.FromObject(value).ToJson(indent: false)})");
         }
         Engine!.Execute($"globalThis.{name}=({EasyObject.FromObject(value).ToJson()})");
     }
     public dynamic? GetValue(string name)
     {
         var result = FromObject(Engine!.GetValue(name).ToObject());
-        Log($"   GetValue({name}) => {EasyObject.FromObject(result).ToJson(indent: false)}");
+        Log($"   EasyScript.GetValue({name}) => {EasyObject.FromObject(result).ToJson(indent: false)}");
         return result;
     }
     public EasyObject GetValueAsEasyObject(string name)
