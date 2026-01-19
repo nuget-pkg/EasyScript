@@ -82,14 +82,15 @@ public class EasyScript: IEasyScript
     {
         if (Transformer != null)
         {
-            if (!fileName.EndsWith(".ts"))
+            if (fileName.EndsWith(".js") || fileName.EndsWith(".ts"))
             {
-                fileName += ".ts";
+                fileName = Path.GetFileNameWithoutExtension(fileName);
             }
+            fileName += "(transformed).ts";
             code = Transformer.Evaluate("""
                                         return transform($1, $2)
                                         """, fileName, code);
-            fileName = $"{fileName}(transformed)";
+            //fileName = $"{fileName}(transformed)";
         }
         if (Debug)
         {
@@ -102,7 +103,8 @@ public class EasyScript: IEasyScript
             //Log(vars, "params");
             for (int i = 0; i < vars.Length; i++)
             {
-                Log($"   ${i + 1} = {EasyObject.FromObject(vars[i]).ToJson(indent: false)}");
+                //Log($"${i + 1} = {EasyObject.FromObject(vars[i]).ToJson(indent: false)}");
+                Log($"{EasyObject.FromObject(vars[i]).ToJson(indent: false)}", $"parameter ${i + 1}");
             }
         }
         //if (Debug) Echo(code, "[Tranformed]");
@@ -110,16 +112,22 @@ public class EasyScript: IEasyScript
     }
     public void SetValue(string name, dynamic? value)
     {
-        if (!name.StartsWith("$"))
+        if (Debug)
         {
-            Log($"   EasyScript.SetValue(\"{name}\", {EasyObject.FromObject(value).ToJson(indent: false)})");
+            if (!name.StartsWith("$"))
+            {
+                Log($"EasyScript.SetValue(\"{name}\", {EasyObject.FromObject(value).ToJson(indent: false)})");
+            }
         }
         Engine!.Execute($"globalThis.{name}=({EasyObject.FromObject(value).ToJson()})");
     }
     public dynamic? GetValue(string name)
     {
         var result = FromObject(Engine!.GetValue(name).ToObject());
-        Log($"   EasyScript.GetValue(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+        if (Debug)
+        {
+            Log($"EasyScript.GetValue(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
+        }
         return result;
     }
     public EasyObject GetValueAsEasyObject(string name)
