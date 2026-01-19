@@ -17,6 +17,12 @@ internal class JintScript
         });
         engine.SetValue("_globals", new JintScriptGlobal());
         engine.Execute("""
+            var exports = {};
+            var console = {
+                debug() {},
+                log() {},
+                warn() {},
+            };
             var $echo = _globals.echo;
             var $log = _globals.log;
             var $getenv = _globals.getenv;

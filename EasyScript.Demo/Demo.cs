@@ -13,10 +13,12 @@ public class Program
         Log(args, "args");
         Echo("helloハロー©");
         var engine = new Global.EasyScript(
-            asmArray: [typeof(Program).Assembly],
-            transform: true
-            ,debug: true
+            asmArray: [typeof(Program).Assembly]
+            //,
+            //transform: true
+            //,debug: true
             );
+        engine.Debug = true;
         engine.SetValue("x", 222);
         var result = engine.EvaluateFileAsEasyObject(
             "my-file.js",
@@ -51,5 +53,8 @@ public class Program
 
             """);
         Echo(engine.GetValue("result"));
+        engine.Execute("""
+            console.log("aaa", "bbb");
+            """);
     }
 }

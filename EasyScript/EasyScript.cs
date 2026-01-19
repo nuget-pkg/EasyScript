@@ -20,12 +20,16 @@ public class EasyScript: IEasyScript
     // ReSharper disable once MemberCanBePrivate.Global
     protected EasyScript Transformer = null;
     // ReSharper disable once MemberCanBePrivate.Global
-    protected bool Debug = false;
+    public bool Transform = true;
+    // ReSharper disable once MemberCanBePrivate.Global
+    public bool Debug = false;
     public EasyScript(
-        Assembly[]? asmArray = null,
-        bool allocEmptyExports = false,
-        bool transform = false,
-        bool debug = false)
+        Assembly[]? asmArray = null
+        //,
+        //bool allocEmptyExports = false,
+        //bool transform = false,
+        //bool debug = false
+        )
     {
         if (asmArray != null)
         {
@@ -35,53 +39,86 @@ public class EasyScript: IEasyScript
             }
         }
         Engine = JintScript.CreateEngine(AsmList.ToArray());
-        if (allocEmptyExports)
-        {
-            Engine!.Execute("globalThis.exports = {}");
-        }
-        Debug = debug;
-        if (transform)
-        {
-            Transformer = new EasyScript(
-                allocEmptyExports: true
-                , transform: false,
-                debug: false);
-            Transformer.Execute("""
-                                var console = {
-                                    debug() {},
-                                    log() {},
-                                    warn() {},
-                                };
+        //if (allocEmptyExports)
+        //{
+        //    Engine!.Execute("globalThis.exports = {}");
+        //}
+        //Debug = debug;
+        //if (transform)
+        //{
+        //    Transformer = new EasyScript(
+        //        //allocEmptyExports: true
+        //        //,
+        //        //transform: false,
+        //        //debug: false
+        //        );
+        //    Transformer.Execute("""
+        //                        var console = {
+        //                            debug() {},
+        //                            log() {},
+        //                            warn() {},
+        //                        };
 
-                                """);
-            var assembly = typeof(EasyScript).Assembly;
-            //Log(assembly.GetManifestResourceNames());
-            var text = Sys.ResourceAsText(assembly, "EasyScript:https-cdn.jsdelivr.net-npm-@babel-standalone@7.28.6-babel.js");
-            //Echo(text, "text");
-            //var engine = new EasyScript(allocEmptyExports: true);
-            Transformer.Execute(text);
-            Transformer.Execute("""
-                                function transform(fileName, code) {
-                                    //$log(fileName, "transform(): fileName");
-                                    //$log(code, "transform(): code(01)");
-                                    code = Babel.transform(code,
-                                                           { presets: ["typescript"],
-                                	                         filename: fileName,
-                                                             sourceType: "script"
-                                                           }).code;
-                                    //$log(code, "transform(): code(2)");
-                                    //throw new Error("xxx");
-                                    return code;
-                                }
+        //                        """);
+        //    var assembly = typeof(EasyScript).Assembly;
+        //    //Log(assembly.GetManifestResourceNames());
+        //    var text = Sys.ResourceAsText(assembly, "EasyScript:https-cdn.jsdelivr.net-npm-@babel-standalone@7.28.6-babel.js");
+        //    //Echo(text, "text");
+        //    //var engine = new EasyScript(allocEmptyExports: true);
+        //    Transformer.Execute(text);
+        //    Transformer.Execute("""
+        //                        function transform(fileName, code) {
+        //                            //$log(fileName, "transform(): fileName");
+        //                            //$log(code, "transform(): code(01)");
+        //                            code = Babel.transform(code,
+        //                                                   { presets: ["typescript"],
+        //                        	                         filename: fileName,
+        //                                                     sourceType: "script"
+        //                                                   }).code;
+        //                            //$log(code, "transform(): code(2)");
+        //                            //throw new Error("xxx");
+        //                            return code;
+        //                        }
 
-                                """);
-        }
+        //                        """);
+        //}
     }
 
-    protected string Tranform(string fileName, string code, object[] vars)
+    protected string TransformCode(string fileName, string code, object[] vars)
     {
-        if (Transformer != null)
+        if (Transform)
         {
+            if (Transformer == null)
+            {
+                Transformer = new EasyScript(
+                    //allocEmptyExports: true
+                    //,
+                    //transform: false,
+                    //debug: false
+                    );
+                Transformer.Transform = false;
+                Transformer.Debug = false;
+                var assembly = typeof(EasyScript).Assembly;
+                //Log(assembly.GetManifestResourceNames());
+                var text = Sys.ResourceAsText(assembly, "EasyScript:https-cdn.jsdelivr.net-npm-@babel-standalone@7.28.6-babel.js");
+                //Echo(text, "text");
+                Transformer.Execute(text);
+                Transformer.Execute("""
+                                    function transform(fileName, code) {
+                                        //$log(fileName, "transform(): fileName");
+                                        //$log(code, "transform(): code(01)");
+                                        code = Babel.transform(code,
+                                                               { presets: ["typescript"],
+                                    	                         filename: fileName,
+                                                                 sourceType: "script"
+                                                               }).code;
+                                        //$log(code, "transform(): code(2)");
+                                        //throw new Error("xxx");
+                                        return code;
+                                    }
+
+                                    """);
+            }
             if (fileName.EndsWith(".js") || fileName.EndsWith(".ts"))
             {
                 fileName = Path.GetFileNameWithoutExtension(fileName);
@@ -90,7 +127,6 @@ public class EasyScript: IEasyScript
             code = Transformer.Evaluate("""
                                         return transform($1, $2)
                                         """, fileName, code);
-            //fileName = $"{fileName}(transformed)";
         }
         if (Debug)
         {
@@ -136,7 +172,7 @@ public class EasyScript: IEasyScript
     }
     public void ExecuteFile(string fileName, string script, params object[] vars)
     {
-        script = Tranform(fileName, script, vars);
+        script = TransformCode(fileName, script, vars);
         if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
@@ -154,7 +190,7 @@ public class EasyScript: IEasyScript
     }
     public dynamic? EvaluateFile(string fileName, string script, params object[] vars)
     {
-        script = Tranform(fileName, script, vars);
+        script = TransformCode(fileName, script, vars);
         if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
