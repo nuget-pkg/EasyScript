@@ -13,7 +13,7 @@ public class Program
     {
         Log(args, "args");
         Echo("helloハロー©");
-        var engine = new Global.EasyScript([typeof(Program).Assembly]);
+        var engine = new Global.EasyScript(transform: true, assemblies: [typeof(Program).Assembly]);
         engine.Debug = true;
         engine.SetValue("x", 222);
         var result = engine.EvaluateFileAsEasyObject(

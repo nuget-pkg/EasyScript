@@ -17,23 +17,29 @@ public class EasyScript //: IEasyScript
     // ReSharper disable once MemberCanBePrivate.Global
     protected Jint.Engine? Engine = null;
     // ReSharper disable once MemberCanBePrivate.Global
-    protected List<Assembly> AsmList = new List<Assembly>();
+    protected List<Assembly> Assemblies = new List<Assembly>();
     // ReSharper disable once MemberCanBePrivate.Global
     protected EasyScript Transformer = null;
     // ReSharper disable once MemberCanBePrivate.Global
-    public bool Transform = true;
+    public bool Transform = false;
     // ReSharper disable once MemberCanBePrivate.Global
     public bool Debug = false;
-    public EasyScript(Assembly[]? asmArray = null)
+    public EasyScript(
+        Assembly[]? assemblies = null,
+        bool debug = false,
+        bool transform = false
+        )
     {
-        if (asmArray != null)
+        Debug = debug;
+        Transform = transform;
+        if (assemblies != null)
         {
-            foreach (var asm in asmArray)
+            foreach (var asm in assemblies)
             {
-                AsmList.Add(asm);
+                Assemblies.Add(asm);
             }
         }
-        Engine = JintScript.CreateEngine(AsmList.ToArray());
+        Engine = JintScript.CreateEngine(Assemblies.ToArray());
     }
 
     protected string TransformCode(string methodName, string fileName, string code, object[] vars)
@@ -165,7 +171,7 @@ public class EasyScript //: IEasyScript
             SetValue($"${i + 1}", vars[i]);
         }
         //var result = engine!.Evaluate(script).ToObject();
-        var result = FromObject(Engine!.Evaluate(script).ToObject()).ToObject();
+        var result = FromObject(Engine!.Evaluate(script, fileName).ToObject()).ToObject();
         for (int i = 0; i < vars.Length; i++)
         {
             Engine!.Execute($"delete globalThis.${i + 1};");
