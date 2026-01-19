@@ -70,12 +70,28 @@ public class EasyScript: IEasyScript
         }
     }
 
-    protected string Tranform(string code)
+    protected string Tranform(string code, object[] vars)
     {
-        if (Transformer == null) return code;
-        return Transformer.Evaluate("""
-                                    return transform($1)
-                                    """, code);
+        if (Transformer != null)
+        {
+            code = Transformer.Evaluate("""
+                                        return transform($1)
+                                        """, code);
+        }
+        if (Debug)
+        {
+            var lines = Sys.TextToLines(code);
+            for (int i = 0; i < lines.Count; i++)
+            {
+                Log($"{i+1,4}: {lines[i]}");
+            }
+            //Log(vars, "params");
+            for (int i = 0; i < vars.Length; i++)
+            {
+                Log($"   ${i + 1} = {EasyObject.FromObject(vars[i]).ToJson(indent: false)}");
+            }
+        }
+        return code;
     }
     public void SetValue(string name, dynamic? value)
     {
@@ -91,7 +107,7 @@ public class EasyScript: IEasyScript
     }
     public void Execute(string script, params object[] vars)
     {
-        script = Tranform(script);
+        script = Tranform(script, vars);
         if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
@@ -105,7 +121,7 @@ public class EasyScript: IEasyScript
     }
     public dynamic? Evaluate(string script, params object[] vars)
     {
-        script = Tranform(script);
+        script = Tranform(script, vars);
         if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {

@@ -14,7 +14,8 @@ public class Program
         Echo("helloハロー©");
         var engine = new Global.EasyScript(
             asmArray: [typeof(Program).Assembly],
-            transpile: true
+            transpile: true,
+            debug: true
             );
         engine.SetValue("x", 222);
         var result = engine.EvaluateAsEasyObject(
