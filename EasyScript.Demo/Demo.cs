@@ -31,8 +31,10 @@ public class Program
         Echo(result);
         engine.Execute("""
             var EasyScript = $namespace("EasyScript");
-            $echo(EasyScript.Demo.Program.Add2(1111, 2222));
+            var result = EasyScript.Demo.Program.Add2(1111, 2222); 
+            $echo(result, "result");
 
             """);
+        Echo(engine.GetValue("result"));
     }
 }
