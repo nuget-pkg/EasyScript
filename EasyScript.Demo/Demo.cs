@@ -1,7 +1,7 @@
 ﻿using System;
 using static Global.EasyObject;
 
-namespace Demo;
+namespace EasyScript.Demo;
 
 public class Program
 {

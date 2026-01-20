@@ -25,7 +25,7 @@ public class TypeScript: IEasyScript
     {
         _engine.SetValue(name, value);
     }
-    public dynamic GetValue(string name)
+    public dynamic? GetValue(string name)
     {
         return _engine.GetValue(name);
     }
@@ -41,11 +41,11 @@ public class TypeScript: IEasyScript
     {
         _engine.Execute(script, vars);
     }
-    public dynamic EvaluateFile(string fileName, string script, params object[] vars)
+    public dynamic? EvaluateFile(string fileName, string script, params object[] vars)
     {
         return _engine.EvaluateFile(fileName, script, vars);
     }
-    public dynamic Evaluate(string script, params object[] vars)
+    public dynamic? Evaluate(string script, params object[] vars)
     {
         return _engine.Evaluate(script, vars);
     }
@@ -57,7 +57,7 @@ public class TypeScript: IEasyScript
     {
         return _engine.EvaluateAsEasyObject(script, vars);
     }
-    public dynamic Call(string name, params object[] vars)
+    public dynamic? Call(string name, params object[] vars)
     {
         return _engine.Call(name, vars);
     }
