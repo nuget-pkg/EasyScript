@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using static Global.EasyObject;
 
+// ReSharper disable once CheckNamespace
 namespace Global;
 
 public class EasyScript: IEasyScript
@@ -20,6 +21,7 @@ public class EasyScript: IEasyScript
     protected readonly List<Assembly> Assemblies = [];
     // ReSharper disable once MemberCanBePrivate.Global
     public bool Debug = false;
+    public string TypeName = "EasyScript";
     // ReSharper disable once MemberCanBePrivate.Global
     protected EasyScript Transformer = null;
     // ReSharper disable once MemberCanBePrivate.Global
@@ -80,7 +82,7 @@ public class EasyScript: IEasyScript
         // ReSharper disable once InvertIf
         if (Debug)
         {
-            Log(DateTime.Now, $"EasyScript.{methodName}(\"{fileName}\") started at");
+            Log(DateTime.Now, $"{this.TypeName}.{methodName}(\"{fileName}\") started at");
             for (int i = 0; i < vars.Length; i++)
             {
                 Log(vars[i], $"  #parameter ${i + 1}");
@@ -99,7 +101,7 @@ public class EasyScript: IEasyScript
         {
             if (!name.StartsWith("$"))
             {
-                Log(value, $"EasyScript.SetValue(\"{name}\", value) where value is");
+                Log(value, $"{this.TypeName}.SetValue(\"{name}\", value) where value is");
             }
         }
         Engine!.Execute($"globalThis.{name}=({EasyObject.FromObject(value).ToJson()})");
@@ -109,7 +111,7 @@ public class EasyScript: IEasyScript
         var result = FromObject(Engine!.GetValue(name).ToObject());
         if (Debug)
         {
-            Log(result, $"EasyScript.GetValue(\"{name}\") returned");
+            Log(result, $"{this.TypeName}.GetValue(\"{name}\") returned");
         }
         return result;
     }
@@ -118,7 +120,7 @@ public class EasyScript: IEasyScript
         var result =  EasyObject.FromObject(GetValue(name));
         if (Debug)
         {
-            Log(result, $"EasyScript.GetValueAsEasyObject(\"{name}\") returned");
+            Log(result, $"{this.TypeName}.GetValueAsEasyObject(\"{name}\") returned");
         }
         return result;
     }
@@ -176,7 +178,7 @@ public class EasyScript: IEasyScript
         }
         if (Debug)
         {
-            Log(result, $"EasyScript.{methodName}(\"{fileName}\") returned");
+            Log(result, $"{this.TypeName}.{methodName}(\"{fileName}\") returned");
         }
         return result;
     }

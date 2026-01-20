@@ -13,6 +13,12 @@ public class Program
     {
         Log(args, "args");
         //ShowDetail = true;
+        var ts = new Global.TypeScript(debug: true);
+        ts.ExecuteFile("test.ts", """
+                   var a: number = 123.4;
+                   console.log("Hello from TypeScript", a);
+
+                   """);
         var engine = new Global.EasyScript(transform: true, assemblies: [typeof(Program).Assembly])
         {
             Debug = true
