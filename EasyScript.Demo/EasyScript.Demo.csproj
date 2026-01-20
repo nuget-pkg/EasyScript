@@ -6,7 +6,7 @@
     <Version>2024.0427.1932.14</Version>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <RootNamespace>MyJson.Demo</RootNamespace>
+    <RootNamespace>EasyScript.Demo</RootNamespace>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <NoWarn>3021,0618,8603,0168,8632,8600,8601,8604,8625,8618,8602</NoWarn>
     <Authors>JavaCommons</Authors>

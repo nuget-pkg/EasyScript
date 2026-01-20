@@ -12,18 +12,18 @@ using static Global.EasyObject;
 
 namespace Global;
 
-public class EasyScript //: IEasyScript
+public class EasyScript: IEasyScript
 {
     // ReSharper disable once MemberCanBePrivate.Global
-    protected Jint.Engine? Engine = null;
+    protected readonly Jint.Engine? Engine = null;
     // ReSharper disable once MemberCanBePrivate.Global
-    protected List<Assembly> Assemblies = new List<Assembly>();
+    protected readonly List<Assembly> Assemblies = [];
+    // ReSharper disable once MemberCanBePrivate.Global
+    public bool Debug = false;
     // ReSharper disable once MemberCanBePrivate.Global
     protected EasyScript Transformer = null;
     // ReSharper disable once MemberCanBePrivate.Global
-    public bool Transform = false;
-    // ReSharper disable once MemberCanBePrivate.Global
-    public bool Debug = false;
+    protected bool Transform = false;
     public EasyScript(
         Assembly[]? assemblies = null,
         bool debug = false,
@@ -42,15 +42,18 @@ public class EasyScript //: IEasyScript
         Engine = JintScript.CreateEngine(Assemblies.ToArray());
     }
 
+    // ReSharper disable once MemberCanBePrivate.Global
     protected string TransformCode(string methodName, string fileName, string code, object[] vars)
     {
         if (Transform)
         {
             if (Transformer == null)
             {
-                Transformer = new EasyScript();
-                Transformer.Transform = false;
-                Transformer.Debug = false;
+                Transformer = new EasyScript
+                {
+                    Transform = false,
+                    Debug = false
+                };
                 var assembly = typeof(EasyScript).Assembly;
                 //Log(assembly.GetManifestResourceNames());
                 var text = Sys.ResourceAsText(assembly, "EasyScript:https-cdn.jsdelivr.net-npm-@babel-standalone@7.28.6-babel.js");
@@ -72,19 +75,14 @@ public class EasyScript //: IEasyScript
 
                                     """);
             }
-            //code = Transformer.Evaluate("""
-            //                            $$transform($1, $2)
-            //                            """, fileName, code);
             code = Transformer.Call("$$transform", fileName, code);
         }
+        // ReSharper disable once InvertIf
         if (Debug)
         {
-            //Log($"EasyScript.{methodName}(\"{fileName}\") started:");
             Log(DateTime.Now, $"EasyScript.{methodName}(\"{fileName}\") started at");
-            //Log(vars, "params");
             for (int i = 0; i < vars.Length; i++)
             {
-                //Log($"{EasyObject.FromObject(vars[i]).ToJson(indent: false)}", $"  #parameter ${i + 1}");
                 Log(vars[i], $"  #parameter ${i + 1}");
             }
             var lines = Sys.TextToLines(code);
@@ -93,7 +91,6 @@ public class EasyScript //: IEasyScript
                 Log($"{i+1,4}: {lines[i]}");
             }
         }
-        //if (Debug) Echo(code, "[Tranformed]");
         return code;
     }
     public void SetValue(string name, dynamic? value)
@@ -102,7 +99,6 @@ public class EasyScript //: IEasyScript
         {
             if (!name.StartsWith("$"))
             {
-                //Log($"EasyScript.SetValue(\"{name}\", {EasyObject.FromObject(value).ToJson(indent: false)})");
                 Log(value, $"EasyScript.SetValue(\"{name}\", value) where value is");
             }
         }
@@ -113,7 +109,6 @@ public class EasyScript //: IEasyScript
         var result = FromObject(Engine!.GetValue(name).ToObject());
         if (Debug)
         {
-            //Log($"EasyScript.GetValue(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
             Log(result, $"EasyScript.GetValue(\"{name}\") returned");
         }
         return result;
@@ -123,7 +118,6 @@ public class EasyScript //: IEasyScript
         var result =  EasyObject.FromObject(GetValue(name));
         if (Debug)
         {
-            //Log($"EasyScript.GetValueAsEasyObject(\"{name}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
             Log(result, $"EasyScript.GetValueAsEasyObject(\"{name}\") returned");
         }
         return result;
@@ -175,7 +169,6 @@ public class EasyScript //: IEasyScript
         {
             SetValue($"${i + 1}", vars[i]);
         }
-        //var result = engine!.Evaluate(script).ToObject();
         var result = FromObject(Engine!.Evaluate(script, fileName).ToObject()).ToObject();
         for (int i = 0; i < vars.Length; i++)
         {
@@ -183,7 +176,6 @@ public class EasyScript //: IEasyScript
         }
         if (Debug)
         {
-            //Log($"EasyScript.{methodName}(\"{fileName}\") => {EasyObject.FromObject(result).ToJson(indent: false)}");
             Log(result, $"EasyScript.{methodName}(\"{fileName}\") returned");
         }
         return result;
@@ -194,7 +186,6 @@ public class EasyScript //: IEasyScript
     }
     public dynamic? Evaluate(string script, params object[] vars)
     {
-        //return EvaluateFile("<unknown>", script, vars);
         string fileName = "<unknown>";
         return EvaluateeWithMethodName("Evaluate", fileName, script, vars);
     }

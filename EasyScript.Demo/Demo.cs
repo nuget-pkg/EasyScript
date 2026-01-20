@@ -13,8 +13,10 @@ public class Program
     {
         Log(args, "args");
         //ShowDetail = true;
-        var engine = new Global.EasyScript(transform: true, assemblies: [typeof(Program).Assembly]);
-        engine.Debug = true;
+        var engine = new Global.EasyScript(transform: true, assemblies: [typeof(Program).Assembly])
+        {
+            Debug = true
+        };
         engine.SetValue("x", 222);
         var result = engine.EvaluateFileAsEasyObject(
             "my-file.js",
