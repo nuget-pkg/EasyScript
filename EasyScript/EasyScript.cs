@@ -52,7 +52,7 @@ public class EasyScript: IEasyScript
                 };
                 var assembly = typeof(EasyScript).Assembly;
                 //Log(assembly.GetManifestResourceNames());
-                var text = Sys.ResourceAsText(assembly, "EasyScript:https-cdn.jsdelivr.net-npm-@babel-standalone@7.28.6-babel.js");
+                var text = Sys.ResourceAsText(assembly, "EasyScript:https_cdn.jsdelivr.net_npm_@babel-standalone@7.28.6_babel.js");
                 //Echo(text, "text");
                 Transformer.Execute(text);
                 Transformer.Execute("""
