@@ -1,9 +1,7 @@
-﻿//css_inc EasyScript.cs
-//css_nuget EasyObject
-namespace EasyScript.Demo;
-
-using System;
+﻿using System;
 using static Global.EasyObject;
+
+namespace Demo;
 
 public class Program
 {

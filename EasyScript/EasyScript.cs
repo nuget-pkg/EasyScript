@@ -1,13 +1,7 @@
-﻿//css_inc JintScript.cs
-//css_inc IEasyObject.cs
-//css_nuget EasyObject
-//css_nuget Jint
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Xml.Linq;
 using static Global.EasyObject;
 
 // ReSharper disable once CheckNamespace
@@ -16,16 +10,16 @@ namespace Global;
 public class EasyScript: IEasyScript
 {
     // ReSharper disable once MemberCanBePrivate.Global
-    protected readonly Jint.Engine? Engine = null;
+    protected readonly Jint.Engine? Engine /*= null*/;
     // ReSharper disable once MemberCanBePrivate.Global
     protected readonly List<Assembly> Assemblies = [];
     // ReSharper disable once MemberCanBePrivate.Global
-    public bool Debug = false;
+    public bool Debug /*= false*/;
     public string TypeName = "EasyScript";
     // ReSharper disable once MemberCanBePrivate.Global
-    protected EasyScript Transformer = null;
+    protected EasyScript? Transformer /*= null*/;
     // ReSharper disable once MemberCanBePrivate.Global
-    protected bool Transform = false;
+    protected bool Transform /*= false*/;
     public EasyScript(
         Assembly[]? assemblies = null,
         bool debug = false,
@@ -135,7 +129,7 @@ public class EasyScript: IEasyScript
             fileName += "(transformed).ts";
         }
         script = TransformCode(methodName, fileName, script, vars);
-        if (vars is null) vars = new object[] { };
+        //if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
             SetValue($"${i + 1}", vars[i]);
@@ -152,7 +146,7 @@ public class EasyScript: IEasyScript
     }
     public void Execute(string script, params object[] vars)
     {
-        string fileName = "<unknown>";
+        string fileName = "<anonymous>";
         ExecuteWithMethodName("Execute", fileName, script, vars);
     }
     private dynamic? EvaluateeWithMethodName(string methodName, string fileName, string script, params object[] vars)
@@ -166,7 +160,7 @@ public class EasyScript: IEasyScript
             fileName += "(transformed).ts";
         }
         script = TransformCode(methodName, fileName, script, vars);
-        if (vars is null) vars = new object[] { };
+        //if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
             SetValue($"${i + 1}", vars[i]);
@@ -188,7 +182,7 @@ public class EasyScript: IEasyScript
     }
     public dynamic? Evaluate(string script, params object[] vars)
     {
-        string fileName = "<unknown>";
+        string fileName = "<anonymous>";
         return EvaluateeWithMethodName("Evaluate", fileName, script, vars);
     }
     public EasyObject EvaluateFileAsEasyObject(string fileName, string script, params object[] vars)
@@ -197,12 +191,12 @@ public class EasyScript: IEasyScript
     }
     public EasyObject EvaluateAsEasyObject(string script, params object[] vars)
     {
-        string fileName = "<unknown>";
+        string fileName = "<anonymous>";
         return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateAsEasyObject", fileName, script, vars));
     }
     public dynamic? Call(string name, params object[] vars)
     {
-        if (vars is null) vars = new object[] { };
+        //if (vars is null) vars = new object[] { };
         string script = name + "(";
         for (int i = 0; i < vars.Length; i++)
         {

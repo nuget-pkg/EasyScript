@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
- using NUnit.Framework;
+using NUnit.Framework;
 using Global;
+using static Global.EasyObjectClassic;
 
-public class DynamicTest
+
+// ReSharper disable once CheckNamespace
+namespace Test;
+
+public class Add2Test
 {
     [SetUp]
     public void Setup()
     {
-        Console.WriteLine("Setup() called");
+        Log("Setup() called");
     }
 
     [Test]

@@ -5,7 +5,13 @@ namespace Global;
 
 public class TypeScript: IEasyScript
 {
-    private readonly EasyScript _engine = null;
+    private readonly EasyScript _engine /*= null*/;
+    public bool Debug
+    {
+        get => _engine.Debug;
+        set => _engine.Debug  = value;
+    }
+    // ReSharper disable once ConvertToPrimaryConstructor
     public TypeScript(
         Assembly[]? assemblies = null,
         bool debug = false)
@@ -15,7 +21,7 @@ public class TypeScript: IEasyScript
             TypeName = "TypeScript"
         };
     }
-    public void SetValue(string name, dynamic value)
+    public void SetValue(string name, dynamic? value)
     {
         _engine.SetValue(name, value);
     }
