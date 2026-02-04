@@ -52,7 +52,7 @@ public class EasyScript: IEasyScript
                 };
                 var assembly = typeof(EasyScript).Assembly;
                 //Log(assembly.GetManifestResourceNames());
-                var text = Sys.ResourceAsText(assembly, "EasyScript:https_cdn.jsdelivr.net_npm_@babel-standalone@7.28.6_babel.js");
+                var text = Internal.ResourceAsText(assembly, "EasyScript:https_cdn.jsdelivr.net_npm_@babel-standalone@7.28.6_babel.js");
                 //Echo(text, "text");
                 Transformer.Execute(text);
                 Transformer.Execute("""
@@ -81,7 +81,7 @@ public class EasyScript: IEasyScript
             {
                 Log(vars[i], $"  #parameter ${i + 1}");
             }
-            var lines = Sys.TextToLines(code);
+            var lines = Internal.TextToLines(code);
             for (int i = 0; i < lines.Count; i++)
             {
                 Log($"{i+1,4}: {lines[i]}");

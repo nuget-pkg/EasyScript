@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Global;
+using System;
 using static Global.EasyObject;
 
 namespace EasyScript.Demo;
@@ -64,7 +65,7 @@ public class Program
         }
         catch (Exception e)
         {
-            Console.Error.WriteLine($"Unhandled Exception({Global.Sys.FullName(e)}): {e.Message}");
+            Console.Error.WriteLine($"Unhandled Exception({EasyObject.FullName(e)}): {e.Message}");
             Console.Error.WriteLine(e.StackTrace);
         }
     }
