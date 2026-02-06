@@ -1,0 +1,3 @@
+[submodule "EasyScript/Internals"]
+	path = EasyScript/Internals
+	url = https://github.com/nuget-pkg/Internals
