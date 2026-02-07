@@ -45,7 +45,7 @@ internal class JintScriptGlobal
     {
         EasyObject.Log(x, title);
     }
-    public string getenv(string name)
+    public string? getenv(string name)
     {
         return System.Environment.GetEnvironmentVariable(name);
     }

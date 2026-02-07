@@ -54,7 +54,7 @@ public class EasyScript: IEasyScript
                 //Log(assembly.GetManifestResourceNames());
                 var text = Sys.ResourceAsText(assembly, "EasyScript:https_cdn.jsdelivr.net_npm_@babel-standalone@7.28.6_babel.js");
                 //Echo(text, "text");
-                Transformer.Execute(text);
+                Transformer.Execute(text!);
                 Transformer.Execute("""
                                     function $$transform(fileName, code) {
                                         //$log(fileName, "transform(): fileName");
@@ -71,7 +71,7 @@ public class EasyScript: IEasyScript
 
                                     """);
             }
-            code = Transformer.Call("$$transform", fileName, code);
+            code = Transformer.Call("$$transform", fileName, code)!;
         }
         // ReSharper disable once InvertIf
         if (Debug)

@@ -2,12 +2,13 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0207.0932.01</Version>
+		<Version>2026.0207.1848.25</Version>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyScript</RootNamespace>
 		<PlatformTarget>AnyCPU</PlatformTarget>
-		<NoWarn>3021,0618,8603,0168,8632,8600,8601,8604,8625,8618,8602</NoWarn>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+		<NoWarn></NoWarn>
 		<Authors>JavaCommons</Authors>
 		<Company>JavaCommons Technologies</Company>
 		<Product>EasyScript</Product>
@@ -49,7 +50,7 @@
 		<None Include=".\README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="EasyObject" Version="2026.207.331.46" />
+		<PackageReference Include="EasyObject" Version="2026.207.1825.58" />
 		<PackageReference Include="Jint" Version="4.5.0" />
 		<!--<PackageReference Include="WinConsole" Version="2024.603.1317.52" />-->
 	</ItemGroup>
