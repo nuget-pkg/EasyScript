@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0209.0133.11</Version>
+		<Version>2026.0209.0813.22</Version>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyScript</RootNamespace>
@@ -50,7 +50,7 @@
 		<None Include=".\README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="EasyObject" Version="2026.209.112.40" />
+		<PackageReference Include="EasyObject" Version="2026.209.807.20" />
 		<PackageReference Include="Jint" Version="4.5.0" />
 		<!--<PackageReference Include="WinConsole" Version="2024.603.1317.52" />-->
 	</ItemGroup>
