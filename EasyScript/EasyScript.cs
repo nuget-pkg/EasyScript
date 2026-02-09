@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-//using static Global.EasyScriptHelper;
-using static Global.EasyObject;
+//using static Global.EasyObject;
+using static Global.EasyScriptHelper;
+using static System.Net.WebRequestMethods;
 
 // ReSharper disable once CheckNamespace
 namespace Global;
@@ -11,8 +12,7 @@ namespace Global;
 public class EasyScript: IEasyScript
 {
     // ReSharper disable once MemberCanBePrivate.Global
-    //protected readonly Jint.Engine? Engine /*= null*/;
-    protected readonly dynamic? Engine /*= null*/;
+    protected readonly Jint.Engine? Engine /*= null*/;
     // ReSharper disable once MemberCanBePrivate.Global
     protected readonly List<Assembly> Assemblies = [];
     // ReSharper disable once MemberCanBePrivate.Global
@@ -37,7 +37,6 @@ public class EasyScript: IEasyScript
                 Assemblies.Add(asm);
             }
         }
-        //Engine = EasyScriptHelper.CreateEngine(Assemblies.ToArray());
         Engine = JintScript.CreateEngine(Assemblies.ToArray());
     }
 
@@ -222,44 +221,30 @@ public class EasyScript: IEasyScript
     //}
 }
 
-#if false
 internal static class EasyScriptHelper
 {
     static readonly Assembly? assembly = null;
-    //static readonly dynamic? instance = null;
+    static readonly dynamic? instance = null;
     static EasyScriptHelper()
     {
         assembly = Sys.LoadFromResource(typeof(EasyScriptHelper).Assembly, "EasyScript:lib.dll");
-    }
-    public static dynamic CreateEngine(params Assembly[] list)
-    {
-        Type myType = assembly!.GetType("Global.JintScript")!;
-        dynamic instance = Activator.CreateInstance(myType!)!;
-        return instance!.CreateEngine(list);
+        Type myType = assembly!.GetType("Local.EasyScriptLibrary")!;
+        instance = Activator.CreateInstance(myType!)!;
     }
     public static void Echo(object? x, string? title = null)
     {
-        Type myType = assembly!.GetType("Global.EasyScriptLibrary")!;
-        dynamic instance = Activator.CreateInstance(myType!)!;
         instance!.Echo(x, title);
     }
     public static void Log(object? x, string? title = null)
     {
-        Type myType = assembly!.GetType("Global.EasyScriptLibrary")!;
-        dynamic instance = Activator.CreateInstance(myType!)!;
         instance!.Log(x, title);
     }
     public static string ObjectToJson(object? x)
     {
-        Type myType = assembly!.GetType("Global.EasyScriptLibrary")!;
-        dynamic instance = Activator.CreateInstance(myType!)!;
         return instance!.ObjectToJson(x);
     }
     public static object? ObjectToObject(object? x)
     {
-        Type myType = assembly!.GetType("Global.EasyScriptLibrary")!;
-        dynamic instance = Activator.CreateInstance(myType!)!;
         return instance!.ObjectToObject(x);
     }
 }
-#endif
