@@ -1,13 +1,13 @@
 //css_nuget EasyObject;
 //css_nuget Jint;
-
+//css_embed https_cdn.jsdelivr.net_npm_@babel-standalone@7.28.6_babel.js
 namespace Global
 {
     using Global;
     using System.Reflection;
     using static EasyObject;
     using Jint;
-    public class EasyScriptLibrary
+    public class EasyScriptLibrary //
     {
         public void Echo(object? x, string? title = null)
         {

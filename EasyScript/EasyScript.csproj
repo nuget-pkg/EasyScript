@@ -59,4 +59,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="..\EasyScript.Internals\lib.dll" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\EasyScript.Internals\.build\lib.dll\lib.dll.csproj" />
+	</ItemGroup>
 </Project>
