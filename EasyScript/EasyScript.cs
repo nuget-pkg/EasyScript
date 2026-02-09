@@ -12,7 +12,8 @@ namespace Global;
 public class EasyScript: IEasyScript
 {
     // ReSharper disable once MemberCanBePrivate.Global
-    protected readonly Jint.Engine? Engine /*= null*/;
+    //protected readonly Jint.Engine? Engine /*= null*/;
+    protected readonly dynamic? Engine /*= null*/;
     // ReSharper disable once MemberCanBePrivate.Global
     protected readonly List<Assembly> Assemblies = [];
     // ReSharper disable once MemberCanBePrivate.Global
