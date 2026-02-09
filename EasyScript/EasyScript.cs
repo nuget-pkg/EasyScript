@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using static Global.EasyObject;
+//using static Global.EasyObject;
 
 // ReSharper disable once CheckNamespace
 namespace Global;
@@ -214,5 +214,14 @@ public class EasyScript: IEasyScript
     public EasyObject CallAsEasyObject(string name, params object[] vars)
     {
         return EasyObject.FromObject(Call(name, vars));
+    }
+}
+
+internal static class EasyScriptHelper
+{
+    static readonly Assembly? assembly = null;
+    static EasyScriptHelper()
+    {
+
     }
 }
