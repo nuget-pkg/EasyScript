@@ -39,11 +39,11 @@ internal class JintScriptGlobal
 {
     public void echo(dynamic x, string? title = null)
     {
-        EasyObject.Echo(x, title);
+        EasyScriptHelper.Echo(x, title);
     }
     public void log(dynamic x, string? title = null)
     {
-        EasyObject.Log(x, title);
+        EasyScriptHelper.Log(x, title);
     }
     public string? getenv(string name)
     {
@@ -56,7 +56,7 @@ internal class JintScriptConsole
     {
         for (int i = 0; i < args.Length; i++)
         {
-            EasyObject.Echo(args[i], $"console.{methodName}(#{i + 1})");
+            EasyScriptHelper.Echo(args[i], $"console.{methodName}(#{i + 1})");
         }
     }
     public void debug(params object[] args)

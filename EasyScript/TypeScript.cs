@@ -29,10 +29,10 @@ public class TypeScript: IEasyScript
     {
         return _engine.GetValue(name);
     }
-    public EasyObject GetValueAsEasyObject(string name)
-    {
-        return _engine.GetValueAsEasyObject(name);
-    }
+    //public EasyObject GetValueAsEasyObject(string name)
+    //{
+    //    return _engine.GetValueAsEasyObject(name);
+    //}
     public void ExecuteFile(string fileName, string script, params object[] vars)
     {
         _engine.ExecuteFile(fileName, script, vars);
@@ -49,20 +49,20 @@ public class TypeScript: IEasyScript
     {
         return _engine.Evaluate(script, vars);
     }
-    public EasyObject EvaluateFileAsEasyObject(string fileName, string script, params object[] vars)
-    {
-        return _engine.EvaluateFileAsEasyObject(fileName, script, vars);
-    }
-    public EasyObject EvaluateAsEasyObject(string script, params object[] vars)
-    {
-        return _engine.EvaluateAsEasyObject(script, vars);
-    }
+    ////public EasyObject EvaluateFileAsEasyObject(string fileName, string script, params object[] vars)
+    ////{
+    ////    return _engine.EvaluateFileAsEasyObject(fileName, script, vars);
+    ////}
+    //public EasyObject EvaluateAsEasyObject(string script, params object[] vars)
+    //{
+    //    return _engine.EvaluateAsEasyObject(script, vars);
+    //}
     public dynamic? Call(string name, params object[] vars)
     {
         return _engine.Call(name, vars);
     }
-    public EasyObject CallAsEasyObject(string name, params object[] vars)
-    {
-        return _engine.CallAsEasyObject(name, vars);
-    }
+    //public EasyObject CallAsEasyObject(string name, params object[] vars)
+    //{
+    //    return _engine.CallAsEasyObject(name, vars);
+    //}
 }

@@ -23,7 +23,7 @@ public class Program
             Debug = true
         };
         engine.SetValue("x", 222);
-        var result = engine.EvaluateFileAsEasyObject(
+        var result = EasyObject.FromObject(engine.EvaluateFile(
             "my-file.js",
             """
             class Person {
@@ -45,7 +45,7 @@ public class Program
             $log(answer, "answer");
             answer;
 
-            """, 111);
+            """, 111));
 
         Echo(result.IsNumber);
         Echo(result);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 //using static Global.EasyObject;
+using static Global.EasyScriptHelper;
+using static System.Net.WebRequestMethods;
 
 // ReSharper disable once CheckNamespace
 namespace Global;
@@ -98,17 +100,18 @@ public class EasyScript: IEasyScript
                 Log(value, $"{this.TypeName}.SetValue(\"{name}\", value) where value is");
             }
         }
-        Engine!.Execute($"globalThis.{name}=({EasyObject.FromObject(value).ToJson()})");
+        Engine!.Execute($"globalThis.{name}=({ObjectToJson(value)})");
     }
     public dynamic? GetValue(string name)
     {
-        var result = FromObject(Engine!.GetValue(name).ToObject());
+        var result = ObjectToObject(Engine!.GetValue(name));
         if (Debug)
         {
             Log(result, $"{this.TypeName}.GetValue(\"{name}\") returned");
         }
         return result;
     }
+#if false
     public EasyObject GetValueAsEasyObject(string name)
     {
         var result =  EasyObject.FromObject(GetValue(name));
@@ -118,6 +121,7 @@ public class EasyScript: IEasyScript
         }
         return result;
     }
+#endif
     private void ExecuteWithMethodName(string methodName, string fileName, string script, params object[] vars)
     {
         if (Transform)
@@ -165,7 +169,7 @@ public class EasyScript: IEasyScript
         {
             SetValue($"${i + 1}", vars[i]);
         }
-        var result = FromObject(Engine!.Evaluate(script, fileName).ToObject()).ToObject();
+        var result = ObjectToObject(Engine!.Evaluate(script, fileName).ToObject());
         for (int i = 0; i < vars.Length; i++)
         {
             Engine!.Execute($"delete globalThis.${i + 1};");
@@ -185,15 +189,15 @@ public class EasyScript: IEasyScript
         string fileName = "<anonymous>";
         return EvaluateeWithMethodName("Evaluate", fileName, script, vars);
     }
-    public EasyObject EvaluateFileAsEasyObject(string fileName, string script, params object[] vars)
-    {
-        return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateFileAsEasyObject", fileName, script, vars));
-    }
-    public EasyObject EvaluateAsEasyObject(string script, params object[] vars)
-    {
-        string fileName = "<anonymous>";
-        return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateAsEasyObject", fileName, script, vars));
-    }
+    //public EasyObject EvaluateFileAsEasyObject(string fileName, string script, params object[] vars)
+    //{
+    //    return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateFileAsEasyObject", fileName, script, vars));
+    //}
+    //public EasyObject EvaluateAsEasyObject(string script, params object[] vars)
+    //{
+    //    string fileName = "<anonymous>";
+    //    return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateAsEasyObject", fileName, script, vars));
+    //}
     public dynamic? Call(string name, params object[] vars)
     {
         //if (vars is null) vars = new object[] { };
@@ -211,17 +215,36 @@ public class EasyScript: IEasyScript
         }
         return result;
     }
-    public EasyObject CallAsEasyObject(string name, params object[] vars)
-    {
-        return EasyObject.FromObject(Call(name, vars));
-    }
+    //public EasyObject CallAsEasyObject(string name, params object[] vars)
+    //{
+    //    return EasyObject.FromObject(Call(name, vars));
+    //}
 }
 
 internal static class EasyScriptHelper
 {
     static readonly Assembly? assembly = null;
+    static readonly dynamic? instance = null;
     static EasyScriptHelper()
     {
-
+        assembly = Sys.LoadFromResource(typeof(EasyScriptHelper).Assembly, "EasyScript:lib.dll");
+        Type myType = assembly!.GetType("Local.EasyScriptLibrary")!;
+        instance = Activator.CreateInstance(myType!)!;
+    }
+    public static void Echo(object? x, string? title = null)
+    {
+        instance!.Echo(x, title);
+    }
+    public static void Log(object? x, string? title = null)
+    {
+        instance!.Log(x, title);
+    }
+    public static string ObjectToJson(object? x)
+    {
+        return instance!.ObjectToJson(x);
+    }
+    public static object? ObjectToObject(object? x)
+    {
+        return instance!.ObjectToObject(x);
     }
 }
