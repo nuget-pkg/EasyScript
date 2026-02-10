@@ -1,3 +1,3 @@
-!/lib.dll
-!/lib.pdb
+!/*.dll
+!/*.pdb
 

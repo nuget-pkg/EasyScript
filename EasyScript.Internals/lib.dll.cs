@@ -2,7 +2,7 @@
 namespace Local
 {
     using Global;
-    using static Global.EasyObject;
+    //using static Global.EasyObject;
     public class EasyScriptLibrary
     {
         public  void Echo(object? x, string? title = null)
@@ -15,11 +15,11 @@ namespace Local
         }
         public string ObjectToJson(object? x)
         {
-            return FromObject(x).ToJson(indent: true); ;
+            return EasyObject.ObjectToJson(x, indent: true);
         }
         public object? ObjectToObject(object? x)
         {
-            return FromObject(x).ToObject(asDynamicObject: true);
+            return EasyObject.ObjectToObject(x, asDynamicObject: true);
         }
     }
 }

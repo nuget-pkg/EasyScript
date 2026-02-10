@@ -4,4 +4,5 @@ set -e
 cd "$(dirname "$0")"
 cwd=`pwd`
 ts=`date "+%Y.%m%d.%H%M.%S"`
-dotnet run --project EasyScript.Demo/EasyScript.Demo.csproj --framework net462 "$@"
+cd EasyScript.Demo
+dotnet run --project EasyScript.Demo.csproj --framework net10.0 "$@"
