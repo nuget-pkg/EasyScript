@@ -1,13 +1,12 @@
-﻿using System;
+﻿// ReSharper disable once CheckNamespace
+namespace Global;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-//using static Global.EasyObject;
-using static Global.EasyScriptHelper;
+using static EasyScriptHelper;
 using static System.Net.WebRequestMethods;
-
-// ReSharper disable once CheckNamespace
-namespace Global;
 
 public class EasyScript: IEasyScript
 {
@@ -111,17 +110,6 @@ public class EasyScript: IEasyScript
         }
         return result;
     }
-#if false
-    public EasyObject GetValueAsEasyObject(string name)
-    {
-        var result =  EasyObject.FromObject(GetValue(name));
-        if (Debug)
-        {
-            Log(result, $"{this.TypeName}.GetValueAsEasyObject(\"{name}\") returned");
-        }
-        return result;
-    }
-#endif
     private void ExecuteWithMethodName(string methodName, string fileName, string script, params object[] vars)
     {
         if (Transform)
@@ -133,7 +121,6 @@ public class EasyScript: IEasyScript
             fileName += "(transformed).ts";
         }
         script = TransformCode(methodName, fileName, script, vars);
-        //if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
             SetValue($"${i + 1}", vars[i]);
@@ -164,7 +151,6 @@ public class EasyScript: IEasyScript
             fileName += "(transformed).ts";
         }
         script = TransformCode(methodName, fileName, script, vars);
-        //if (vars is null) vars = new object[] { };
         for (int i = 0; i < vars.Length; i++)
         {
             SetValue($"${i + 1}", vars[i]);
@@ -189,18 +175,8 @@ public class EasyScript: IEasyScript
         string fileName = "<anonymous>";
         return EvaluateeWithMethodName("Evaluate", fileName, script, vars);
     }
-    //public EasyObject EvaluateFileAsEasyObject(string fileName, string script, params object[] vars)
-    //{
-    //    return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateFileAsEasyObject", fileName, script, vars));
-    //}
-    //public EasyObject EvaluateAsEasyObject(string script, params object[] vars)
-    //{
-    //    string fileName = "<anonymous>";
-    //    return EasyObject.FromObject(EvaluateeWithMethodName("EvaluateAsEasyObject", fileName, script, vars));
-    //}
     public dynamic? Call(string name, params object[] vars)
     {
-        //if (vars is null) vars = new object[] { };
         string script = name + "(";
         for (int i = 0; i < vars.Length; i++)
         {
@@ -215,10 +191,6 @@ public class EasyScript: IEasyScript
         }
         return result;
     }
-    //public EasyObject CallAsEasyObject(string name, params object[] vars)
-    //{
-    //    return EasyObject.FromObject(Call(name, vars));
-    //}
 }
 
 internal static class EasyScriptHelper
