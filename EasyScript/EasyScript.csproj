@@ -60,7 +60,12 @@
 	<ItemGroup>
 		<EmbeddedResource Include=".\https_cdn.jsdelivr.net_npm_@babel-standalone@7.28.6_babel.js" />
 	</ItemGroup>
+	<!--
 	<ItemGroup>
 		<EmbeddedResource Include="..\EasyScript.Internals\lib.dll" />
 	</ItemGroup>
+	-->
+    <ItemGroup>
+      <Reference Include="EasyScript.Internals"><HintPath>..\EasyScript.Internals\EasyScript.Internals.dll</HintPath></Reference>
+    </ItemGroup>
 </Project>

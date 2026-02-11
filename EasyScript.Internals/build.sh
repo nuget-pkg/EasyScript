@@ -5,4 +5,4 @@ cd "$(dirname "$0")"
 cwd=`pwd`
 ts=`date "+%Y.%m%d.%H%M.%S"`
 wingen
-.r.lib @merge
+.r.EasyScript.Internals @merge

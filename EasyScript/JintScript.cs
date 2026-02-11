@@ -1,6 +1,4 @@
-//css_nuget Jint
 using Jint;
-using System.IO;
 using System.Reflection;
 namespace Global;
 internal class JintScript
@@ -19,12 +17,6 @@ internal class JintScript
         engine.SetValue("console", new JintScriptConsole());
         engine.Execute("""
             var exports = {};
-            /*
-            var console = {
-                debug() {},
-                log() {},
-                warn() {},
-            };*/
             var $echo = _globals.echo;
             var $log = _globals.log;
             var $getenv = _globals.getenv;
@@ -39,11 +31,11 @@ internal class JintScriptGlobal
 {
     public void echo(dynamic x, string? title = null)
     {
-        EasyScriptHelper.Echo(x, title);
+        Local.EasyScriptLibrary.Echo(x, title);
     }
     public void log(dynamic x, string? title = null)
     {
-        EasyScriptHelper.Log(x, title);
+        Local.EasyScriptLibrary.Log(x, title);
     }
     public string? getenv(string name)
     {
@@ -56,7 +48,7 @@ internal class JintScriptConsole
     {
         for (int i = 0; i < args.Length; i++)
         {
-            EasyScriptHelper.Echo(args[i], $"console.{methodName}(#{i + 1})");
+            Local.EasyScriptLibrary.Echo(args[i], $"console.{methodName}(#{i + 1})");
         }
     }
     public void debug(params object[] args)
