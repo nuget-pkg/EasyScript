@@ -195,13 +195,17 @@ public class EasyScript: IEasyScript
 
 internal static class EasyScriptHelper
 {
-    static readonly Assembly? assembly = null;
-    static readonly dynamic? instance = null;
+    //static readonly Assembly? assembly = null;
+    static readonly dynamic instance;
+    //public static dynamic CreateInstanceFromResource(Assembly thisAssemby, string resName, string className)
+    //{
+    //    var assembly = Sys.LoadFromResource(thisAssemby, resName);
+    //    Type classType = assembly!.GetType(className)!;
+    //    return Activator.CreateInstance(classType!)!;
+    //}
     static EasyScriptHelper()
     {
-        assembly = Sys.LoadFromResource(typeof(EasyScriptHelper).Assembly, "EasyScript:lib.dll");
-        Type myType = assembly!.GetType("Local.EasyScriptLibrary")!;
-        instance = Activator.CreateInstance(myType!)!;
+        instance = Sys.CreateInstanceFromResource(typeof(EasyScriptHelper).Assembly, "EasyScript:lib.dll", "Local.EasyScriptLibrary");
     }
     public static void Echo(object? x, string? title = null)
     {
