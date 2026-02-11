@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0212.0742.51</Version>
+		<Version>2026.0212.0751.54</Version>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyScript</RootNamespace>
@@ -68,4 +68,9 @@
     <ItemGroup>
       <Reference Include="EasyScript.Internals"><HintPath>..\EasyScript.Internals\EasyScript.Internals.dll</HintPath></Reference>
     </ItemGroup>
+	<ItemGroup>
+		<None Include="..\EasyScript.Internals\EasyScript.Internals.dll" Pack="true" PackagePath="lib/netstandard2.0/" />
+		<None Include="..\EasyScript.Internals\EasyScript.Internals.dll" Pack="true" PackagePath="lib/net462/" />
+		<None Include="..\EasyScript.Internals\EasyScript.Internals.dll" Pack="true" PackagePath="lib/net8.0/" />
+	</ItemGroup>
 </Project>
