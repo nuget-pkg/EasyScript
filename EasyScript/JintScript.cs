@@ -29,13 +29,14 @@ internal class JintScript
 }
 internal class JintScriptGlobal
 {
+    internal static dynamic _BasicIO = Sys.CreateInstanceFromResource(typeof(EasyScript).Assembly, "EasyScript:BasicIO.dll", "Local.BasicIO");
     public void echo(dynamic x, string? title = null)
     {
-        Local.EasyScriptLibrary.Echo(x, title);
+        _BasicIO.Echo(x, title);
     }
     public void log(dynamic x, string? title = null)
     {
-        Local.EasyScriptLibrary.Log(x, title);
+        _BasicIO.Log(x, title);
     }
     public string? getenv(string name)
     {
@@ -44,11 +45,12 @@ internal class JintScriptGlobal
 }
 internal class JintScriptConsole
 {
+    internal static dynamic _BasicIO = Sys.CreateInstanceFromResource(typeof(EasyScript).Assembly, "EasyScript:BasicIO.dll", "Local.BasicIO");
     private void output(string methodName, params object[] args)
     {
         for (int i = 0; i < args.Length; i++)
         {
-            Local.EasyScriptLibrary.Echo(args[i], $"console.{methodName}(#{i + 1})");
+            _BasicIO.Echo(args[i], $"console.{methodName}(#{i + 1})");
         }
     }
     public void debug(params object[] args)

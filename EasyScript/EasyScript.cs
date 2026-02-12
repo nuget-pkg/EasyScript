@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using static Local.EasyScriptLibrary;
+//using static Local.EasyScriptLibrary;
 
 // ReSharper disable once CheckNamespace
 namespace Global;
 
 public class EasyScript: IEasyScript
 {
+    internal static dynamic _BasicIO = Sys.CreateInstanceFromResource(typeof(EasyScript).Assembly, "EasyScript:BasicIO.dll", "Local.BasicIO");
     // ReSharper disable once MemberCanBePrivate.Global
     protected readonly Jint.Engine? Engine /*= null*/;
     // ReSharper disable once MemberCanBePrivate.Global
@@ -76,15 +77,15 @@ public class EasyScript: IEasyScript
         // ReSharper disable once InvertIf
         if (Debug)
         {
-            Log(DateTime.Now, $"{this.TypeName}.{methodName}(\"{fileName}\") started at");
+            _BasicIO.Log(DateTime.Now, $"{this.TypeName}.{methodName}(\"{fileName}\") started at");
             for (int i = 0; i < vars.Length; i++)
             {
-                Log(vars[i], $"  #parameter ${i + 1}");
+                _BasicIO.Log(vars[i], $"  #parameter ${i + 1}");
             }
             var lines = Sys.TextToLines(code);
             for (int i = 0; i < lines.Count; i++)
             {
-                Log($"{i+1,4}: {lines[i]}");
+                _BasicIO.Log($"{i+1,4}: {lines[i]}");
             }
         }
         return code;
@@ -95,17 +96,17 @@ public class EasyScript: IEasyScript
         {
             if (!name.StartsWith("$"))
             {
-                Log(value, $"{this.TypeName}.SetValue(\"{name}\", value) where value is");
+                _BasicIO.Log(value, $"{this.TypeName}.SetValue(\"{name}\", value) where value is");
             }
         }
-        Engine!.Execute($"globalThis.{name}=({ObjectToJson(value)})");
+        Engine!.Execute($"globalThis.{name}=({_BasicIO.ObjectToJson(value)})");
     }
     public dynamic? GetValue(string name)
     {
-        var result = ObjectToObject(Engine!.GetValue(name));
+        var result = _BasicIO.ObjectToObject(Engine!.GetValue(name));
         if (Debug)
         {
-            Log(result, $"{this.TypeName}.GetValue(\"{name}\") returned");
+            _BasicIO.Log(result, $"{this.TypeName}.GetValue(\"{name}\") returned");
         }
         return result;
     }
@@ -154,14 +155,14 @@ public class EasyScript: IEasyScript
         {
             SetValue($"${i + 1}", vars[i]);
         }
-        var result = ObjectToObject(Engine!.Evaluate(script, fileName).ToObject());
+        var result = _BasicIO.ObjectToObject(Engine!.Evaluate(script, fileName).ToObject());
         for (int i = 0; i < vars.Length; i++)
         {
             Engine!.Execute($"delete globalThis.${i + 1};");
         }
         if (Debug)
         {
-            Log(result, $"{this.TypeName}.{methodName}(\"{fileName}\") returned");
+            _BasicIO.Log(result, $"{this.TypeName}.{methodName}(\"{fileName}\") returned");
         }
         return result;
     }
