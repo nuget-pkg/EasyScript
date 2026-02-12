@@ -1,4 +1,4 @@
-//css_nuget *EasyObject*;
+//+#nuget *EasyObject*;
 namespace Local
 {
     using Global;
