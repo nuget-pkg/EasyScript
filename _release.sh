@@ -14,4 +14,4 @@ dotnet pack -o . -p:Configuration=Release
 
 tag="v$version"
 cd $cwd
-git-put "[RELEASE] $tag" || true
+git-put -a "[RELEASE] $tag" || true
