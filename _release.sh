@@ -14,10 +14,4 @@ dotnet pack -o . -p:Configuration=Release
 
 tag="v$version"
 cd $cwd
-#git add .
-#git commit -m"$tag"
 git-put "[RELEASE] $tag" || true
-#git tag -a "$tag" -m"$tag"
-#git push origin "$tag"
-#git push origin HEAD:main
-#git remote -v
