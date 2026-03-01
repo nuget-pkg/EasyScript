@@ -16,6 +16,10 @@ namespace Local
         {
             return EasyObject.ObjectToJson(x, indent: true);
         }
+        public string ObjectToCompactJson(object? x)
+        {
+            return EasyObject.ObjectToJson(x, indent: false);
+        }
         public object? ObjectToObject(object? x)
         {
             return EasyObject.ObjectToObject(x, asDynamicObject: true);

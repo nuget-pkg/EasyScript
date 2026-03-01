@@ -1,4 +1,6 @@
 using Jint;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 namespace Global;
 internal class JintScript
@@ -48,10 +50,24 @@ internal class JintScriptConsole
     internal static dynamic _BasicIO = Sys.CreateInstanceFromResource(typeof(EasyScript).Assembly, "EasyScript:BasicIO.dll", "Local.BasicIO");
     private void output(string methodName, params object[] args)
     {
+#if false
         for (int i = 0; i < args.Length; i++)
         {
             _BasicIO.Echo(args[i], $"console.{methodName}(#{i + 1})");
         }
+#else
+        if (args.Length == 1)
+        {
+            _BasicIO.Echo(args[0]);
+            return;
+        }
+        var list = new List<object?>();
+        for (int i = 0; i < args.Length; i++)
+        {
+            list.Add(args[i]);
+        }
+        Console.WriteLine(_BasicIO.ObjectToCompactJson(list));
+#endif
     }
     public void debug(params object[] args)
     {
