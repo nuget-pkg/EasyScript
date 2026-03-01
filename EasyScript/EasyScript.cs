@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-//using static Local.EasyScriptLibrary;
 
-// ReSharper disable once CheckNamespace
 namespace Global;
 
 public class EasyScript: IEasyScript
 {
     internal static dynamic _BasicIO = Sys.CreateInstanceFromResource(typeof(EasyScript).Assembly, "EasyScript:BasicIO.dll", "Local.BasicIO");
-    // ReSharper disable once MemberCanBePrivate.Global
     protected readonly Jint.Engine? Engine /*= null*/;
-    // ReSharper disable once MemberCanBePrivate.Global
     protected readonly List<Assembly> Assemblies = [];
-    // ReSharper disable once MemberCanBePrivate.Global
     public bool Debug /*= false*/;
     public string TypeName = "EasyScript";
-    // ReSharper disable once MemberCanBePrivate.Global
     protected EasyScript? Transformer /*= null*/;
-    // ReSharper disable once MemberCanBePrivate.Global
     protected bool Transform /*= false*/;
     public EasyScript(
         Assembly[]? assemblies = null,
@@ -39,7 +32,6 @@ public class EasyScript: IEasyScript
         Engine = JintScript.CreateEngine(Assemblies.ToArray());
     }
 
-    // ReSharper disable once MemberCanBePrivate.Global
     protected string TransformCode(string methodName, string fileName, string code, object[] vars)
     {
         if (Transform)
@@ -74,7 +66,6 @@ public class EasyScript: IEasyScript
             }
             code = Transformer.Call("$$transform", fileName, code)!;
         }
-        // ReSharper disable once InvertIf
         if (Debug)
         {
             _BasicIO.Log(DateTime.Now, $"{this.TypeName}.{methodName}(\"{fileName}\") started at");
@@ -103,7 +94,7 @@ public class EasyScript: IEasyScript
     }
     public dynamic? GetValue(string name)
     {
-        var result = _BasicIO.ObjectToObject(Engine!.GetValue(name));
+        var result = _BasicIO.ObjectToObject(Engine!.GetValue(name).ToObject());
         if (Debug)
         {
             _BasicIO.Log(result, $"{this.TypeName}.GetValue(\"{name}\") returned");
@@ -140,7 +131,7 @@ public class EasyScript: IEasyScript
         string fileName = "<anonymous>";
         ExecuteWithMethodName("Execute", fileName, script, vars);
     }
-    private dynamic? EvaluateeWithMethodName(string methodName, string fileName, string script, params object[] vars)
+    private dynamic? EvaluateWithMethodName(string methodName, string fileName, string script, params object[] vars)
     {
         if (Transform)
         {
@@ -168,16 +159,15 @@ public class EasyScript: IEasyScript
     }
     public dynamic? EvaluateFile(string fileName, string script, params object[] vars)
     {
-        return EvaluateeWithMethodName("EvaluateFile", fileName, script, vars);
+        return EvaluateWithMethodName("EvaluateFile", fileName, script, vars);
     }
     public dynamic? Evaluate(string script, params object[] vars)
     {
         string fileName = "<anonymous>";
-        return EvaluateeWithMethodName("Evaluate", fileName, script, vars);
+        return EvaluateWithMethodName("Evaluate", fileName, script, vars);
     }
     public dynamic? Call(string name, params object[] vars)
     {
-        //if (vars is null) vars = new object[] { };
         string script = name + "(";
         for (int i = 0; i < vars.Length; i++)
         {

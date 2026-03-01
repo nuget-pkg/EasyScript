@@ -1,5 +1,4 @@
-﻿// Commit at 2026.0228.2351.26
-using Global;
+﻿//using Global;
 using System;
 using static Global.EasyObject;
 
@@ -11,8 +10,7 @@ public class Program
         { return a + b; }
     public static void Main(string[] args)
     {
-        Log(args, "args");
-        //ShowDetail = true;
+        Log(new { args });
         var ts = new Global.TypeScript(debug: true);
         ts.ExecuteFile("test.ts", """
                    var a: number = 123.4;
@@ -24,7 +22,7 @@ public class Program
             Debug = true
         };
         engine.SetValue("x", 222);
-        var result = EasyObject.FromObject(engine.EvaluateFile(
+        var result = FromObject(engine.EvaluateFile(
             "my-file.js",
             """
             class Person {
@@ -48,15 +46,15 @@ public class Program
 
             """, 111));
 
-        Echo(result.IsNumber);
-        Echo(result);
+        Log(result.IsNumber, "result.IsNumber");
+        Log(result, "result");
         engine.Execute("""
             var EasyScript = $namespace("EasyScript");
             var result = EasyScript.Demo.Program.Add2(1111, 2222); 
             $echo(result, "result");
 
             """);
-        Echo(engine.GetValue("result"));
+        Log(engine.GetValue("result"), """engine.GetValue("result")"""); ;
         try
         {
             engine.Execute("""
@@ -66,8 +64,7 @@ public class Program
         }
         catch (Exception e)
         {
-            Console.Error.WriteLine($"Unhandled Exception({EasyObject.FullName(e)}): {e.Message}");
-            Console.Error.WriteLine(e.StackTrace);
+            Global.Sys.Crash(e);
         }
     }
 }

@@ -35,8 +35,7 @@
 		<Reference Include="System.Xml.Linq" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="EasyObject" Version="2026.222.350.32" />
-		<PackageReference Include="Razorvine.Pickle" Version="1.5.0" />
+		<PackageReference Include="Global.Sys" Version="2026.301.1722.37" />
 		<PackageReference Include="coverlet.collector" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
