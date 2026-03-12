@@ -35,16 +35,16 @@
 		<Reference Include="System.Xml.Linq" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Global.Sys" Version="2026.301.1722.37" />
+		<PackageReference Include="Global.Sys" Version="2026.312.1842.59" />
 		<PackageReference Include="coverlet.collector" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="NUnit" Version="4.5.0" />
+		<PackageReference Include="NUnit" Version="4.5.1" />
 		<PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
-		<PackageReference Include="NUnit.Analyzers" Version="4.11.2">
+		<PackageReference Include="NUnit.Analyzers" Version="4.12.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

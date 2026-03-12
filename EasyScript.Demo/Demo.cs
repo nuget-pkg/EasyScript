@@ -1,4 +1,4 @@
-﻿//using Global;
+//using Global;
 using System;
 using System.IO;
 using static Global.EasyObject;
@@ -12,39 +12,36 @@ public class Program
         { return a + b; }
     public static void Main(string[] args)
     {
-        //Log(new { args });
-        var ts = new Global.EasyScript(debug: false);
-        string fileName = "assets/omljs.js";
-        string code = File.ReadAllText(fileName);
-        //Log(code);
-        ts.Execute(code);
-        ts.Execute("""
-                        run(`
+        try
+        {
+            //Log(new { args });
+            var ts = new Global.EasyScript(debug: false);
+            //string fileName = "assets/omljs.js";
+            string fileName = "assets/xp-lisp.iife.js";
+            string code = File.ReadAllText(fileName);
+            //Log(code);
+            ts.Execute(code);
+            ts.Execute("""
+            var scope = lisp.lisp(globalThis);
+            scope.run(`
             #lang lisp
             # 行コメント(1)
             ##行コメント(2)
             ;行コメント(3)
-            (console.log #@\`answerA\`={{11+22}}@)
+            (console.log $@<%>answerA<%>={{11+22}}@)
             (console.log ("#@" "\`answerB\`={{110+220}}"))
-            (console.log #@
+            (console.log $@
             answer1={{110+220}}
             answer2={{330+440}}
             @)
-            (console.log "abc
-            def")
-            (console.log {
-              "abc" "xyz"
-              "bbb" (11 undefined "ハロー©")
-            })
-            (console.log #| 111+222 |#)
+            (console.log #|@ 111+222 |#)
             (console.log ("@" "777+888"))
-            (console.log #| 1111+2222 |#)
+            (console.log #|@ 1111+2222 |#)
             (console.log @
             1111
             +
             2222
             @)
-            (console.log "str")
             (console.log "ハロー©")
             (define xyz 777)
             (console.log xyz)
@@ -86,5 +83,11 @@ public class Program
               (catch ex (console.log ex]
             `); // run()
             """);
+        }
+        catch (Exception ex)
+        {
+            //Log(ex);
+            Crash(ex);
+        }
     }
 }

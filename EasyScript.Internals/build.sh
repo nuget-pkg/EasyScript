@@ -5,4 +5,5 @@ cd "$(dirname "$0")"
 cwd=`pwd`
 ts=`date "+%Y.%m%d.%H%M.%S"`
 wingen.exe
-.r.BasicIO @merge
+#.r.BasicIO @merge
+./BasicIO.dll.sh @merge
